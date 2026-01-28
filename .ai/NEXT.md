@@ -8,42 +8,46 @@
 
 ---
 
-## ACTIVE SESSION: 2026-01-27 - Claude Code
+## Current Phase: 0 (Working Prototype)
 
-**What's happening:** Claude Code is performing a major project reorganization based on research into GitHub ecosystem best practices and AGENTS.md standard.
+## Last Session: 2026-01-27 - Claude Code + Embedder
 
-**Why:** To establish proper multi-AI collaboration, fix outdated documentation, set up CI/CD, and clean up redundant files.
+**Completed:**
+- [x] GitHub ecosystem setup (Actions CI, issue templates, PR template)
+- [x] README.md updated to current hardware
+- [x] CHANGELOG.md created
+- [x] Copilot instructions updated
+- [x] GitHub labels created (phase:0, phase:1, firmware, hardware, blocked, ai-generated)
+- [x] AI files reorganized into `.ai/` folder
+- [x] docs/DECISIONS.md created for decision tracking
+- [x] Redundant files deleted
 
-**Tasks in progress:**
-- [ ] Fix README.md (update to current hardware)
-- [ ] Create CHANGELOG.md
-- [ ] Create GitHub Actions workflow (auto-build)
-- [ ] Create issue templates (bug, feature, hardware)
-- [ ] Merge/delete redundant docs
-- [ ] Update copilot-instructions.md
-- [ ] Set up GitHub Issues + Labels
-
-**If you're Embedder:** Wait for this reorganization to complete, or read `.ai/WORKLOG.md` for latest state. Hardware info is changing from ESP32-C3 → ESP32-S3, BH1750 → VEML7700, LSM6DS3 → LSM6DSOX.
+**Next:** Commit and push all changes to GitHub.
 
 ---
 
-## Current Phase: 0 (Working Prototype)
+## Immediate Priority
 
-## After Reorganization
-**Waiting for hardware** - User needs to order/connect components before firmware testing.
+**Hardware testing** - I2C scanner found devices at 0x3C (OLED) and 0x51 (unknown), but NO IMU at 0x6A.
 
-## When Hardware Arrives
+**Questions to resolve:**
+1. Is the Sense expansion board attached to your XIAO ESP32-S3?
+2. What device is at address 0x51?
+3. Do you have the VEML7700 and LSM6DSOX sensors to connect?
 
-### 1. First Boot Test
-- [ ] Connect XIAO ESP32-S3 Sense via USB
-- [ ] Flash firmware: `pio run --target upload`
-- [ ] Open serial monitor: `pio device monitor`
-- [ ] Verify "System ready - DISARMED" message
+---
 
-### 2. I2C Sensor Test
+## When External Sensors Arrive
+
+### 1. I2C Sensor Test
 - [ ] Wire VEML7700 and LSM6DSOX via STEMMA QT
 - [ ] Run I2C scanner to verify addresses (0x10, 0x6A)
 - [ ] Check sensor readings in serial output
+
+### 2. First Boot Test
+- [ ] Flash main firmware: `pio run --target upload`
+- [ ] Open serial monitor: `pio device monitor`
+- [ ] Verify "System ready - DISARMED" message
 
 ### 3. Output Test
 - [ ] Test LEDs (should show blue when disarmed)
@@ -78,15 +82,17 @@
 
 ---
 
-## Shopping List (BOM)
+## Hardware Shopping List
+
 See `docs/ENGINEERING_DOC.md` Section 8 for full BOM with links.
 
-**Minimum to start:**
-1. Seeed XIAO ESP32-C3 (~$5)
-2. Grove BH1750 Light Sensor (~$6)
-3. Grove LSM6DS3 IMU (~$12)
-4. Grove I2C Hub (~$3)
-5. USB-C cable
-6. Breadboard + jumper wires
+**Current Hardware (you have):**
+- Seeed XIAO ESP32-S3 Sense
 
-**Total for basic testing: ~$30**
+**Still Needed:**
+1. Adafruit VEML7700 Light Sensor (~$5)
+2. Adafruit LSM6DSOX IMU (~$12) - OR use onboard IMU if Sense board attached
+3. STEMMA QT cables (~$3)
+4. Breadboard + jumper wires
+
+**Total remaining: ~$20-25**
