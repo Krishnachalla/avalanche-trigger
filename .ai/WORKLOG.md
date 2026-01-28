@@ -5,6 +5,116 @@
 
 ---
 
+## 2025-01-28 - Embedder
+**Fixed .cursorrules - Broken References After Repo Reorganization**
+
+### What Happened
+User noticed `.cursorrules` was showing on GitHub but wasn't mentioned in the new folder structure documentation. Investigation revealed:
+
+1. `.cursorrules` EXISTS and is tracked in git (was always there)
+2. It was NOT showing in `listDirectory` output because it's a hidden file (starts with `.`)
+3. The file had **BROKEN REFERENCES** pointing to deleted/moved files:
+   - `CLAUDE.md` → DELETED (should be `.ai/AGENTS.md`)
+   - `NEXT.md` → MOVED (should be `.ai/NEXT.md`)
+   - `WORKLOG.md` → MOVED (should be `.ai/WORKLOG.md`)
+4. It still said `ESP32-C3` (wrong - user has `ESP32-S3`)
+
+### What Was Fixed
+Updated `.cursorrules` with correct paths and hardware:
+
+**Before:**
+```
+1. `CLAUDE.md` - Project context and architecture
+2. `NEXT.md` - Current priorities
+3. `WORKLOG.md` - What's been done
+...
+Embedded C++ firmware for ESP32-C3
+```
+
+**After:**
+```
+1. `.ai/AGENTS.md` - Project context and architecture
+2. `.ai/NEXT.md` - Current priorities
+3. `.ai/WORKLOG.md` - What's been done
+...
+Embedded C++ firmware for Seeed XIAO ESP32-S3
+```
+
+### Files Changed
+- `.cursorrules` - Fixed all path references to `.ai/` folder, corrected board to ESP32-S3
+
+### Commit
+`f4951d3` - "Fix .cursorrules: update paths to .ai/ folder, correct ESP32-S3 board"
+
+---
+
+## ⚠️ IMPORTANT: COMPLETE FILE STRUCTURE (INCLUDING HIDDEN FILES)
+
+**DO NOT REORGANIZE OR REFACTOR THIS STRUCTURE. THIS IS INTENTIONAL.**
+
+The previous documentation missed hidden files. Here is the COMPLETE structure:
+
+```
+/Users/krishna/Desktop/Developmet/avalanche-trigger/
+│
+├── .ai/                          # AI assistant context (HIDDEN FOLDER)
+│   ├── AGENTS.md                 # Master context for all AI tools
+│   ├── EMBEDDER.md               # Embedder-specific context
+│   ├── NEXT.md                   # Current priorities & shopping list
+│   └── WORKLOG.md                # This file - history of all changes
+│
+├── .cursorrules                  # Cursor IDE rules (HIDDEN FILE, tracked in git)
+├── .gitignore                    # Git ignore patterns
+├── .github/                      # GitHub ecosystem (HIDDEN FOLDER)
+│   ├── workflows/
+│   │   └── build.yml             # GitHub Actions CI
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.md
+│   │   ├── feature_request.md
+│   │   └── hardware_issue.md
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   └── copilot-instructions.md   # GitHub Copilot context
+│
+├── .pio/                         # PlatformIO build cache (git ignored)
+│
+├── README.md                     # User-facing project readme
+├── CHANGELOG.md                  # Release history
+├── platformio.ini                # PlatformIO build configuration
+│
+├── docs/
+│   ├── ENGINEERING_DOC.md        # Full technical specifications
+│   ├── PROJECT_MANIFESTO.md      # Philosophy & phased approach
+│   ├── DECISIONS.md              # Decision history & rationale
+│   └── debug/
+│       ├── 2025-01-28.md         # Debug session logs
+│       └── 2025-01-28_raw.md     # Raw serial output
+│
+├── include/
+│   └── config.h                  # All tunable parameters
+│
+├── src/
+│   ├── main.cpp.bak              # Original firmware (backed up)
+│   └── i2c_scanner.cpp           # Current active firmware
+│
+└── scripts/
+    ├── auto-sync.sh              # GitHub auto-sync utility
+    └── save-session.sh           # Session save utility
+```
+
+### Why Hidden Files Matter
+- `.cursorrules` - Cursor IDE reads this for project rules
+- `.ai/` - All AI assistants read context from here
+- `.github/` - GitHub Actions, templates, Copilot instructions
+- `.gitignore` - Controls what gets committed
+
+### Common Mistakes to Avoid
+1. **Don't delete `.cursorrules`** - Cursor IDE needs it
+2. **Don't move files out of `.ai/`** - All AI tools expect them there
+3. **Don't forget hidden files in documentation** - Use `ls -la` not just `ls`
+4. **When updating paths, update ALL files** - `.cursorrules`, `.ai/AGENTS.md`, `.ai/EMBEDDER.md`, `.github/copilot-instructions.md` all reference each other
+
+---
+
 ## 2026-01-27 - Claude Code (Claude Opus 4.5)
 **GitHub Ecosystem Setup - COMPLETED**
 
