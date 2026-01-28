@@ -1,5 +1,11 @@
 # Avalanche Airbag Auto-Trigger
 
+> **FOR AI ASSISTANTS**: Read this file completely before making any changes.
+> After completing work, update `WORKLOG.md` with what you did.
+> Check `NEXT.md` for current priorities.
+
+---
+
 ## Project Summary
 Safety-critical embedded device that automatically deploys an avalanche airbag when a skier is buried and incapacitated. Detects burial via light sensor, confirms incapacitation via IMU stillness, then triggers solenoid to deploy airbag.
 

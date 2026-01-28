@@ -1,0 +1,33 @@
+# Cursor Rules for Avalanche Trigger Project
+
+## Required Reading
+Before making changes, read these files:
+1. `CLAUDE.md` - Project context and architecture
+2. `NEXT.md` - Current priorities
+3. `WORKLOG.md` - What's been done (add your work here when done)
+
+## Project Type
+Embedded C++ firmware for ESP32-C3 using PlatformIO + Arduino framework.
+
+## Code Style
+- Use camelCase for functions and variables
+- Use UPPER_SNAKE_CASE for constants and macros
+- All configurable values go in `include/config.h`
+- State machine pattern with enum + switch-case
+- Safety-critical: solenoid defaults LOW, explicit arming required
+
+## Build Commands
+- Build: `pio run`
+- Flash: `pio run --target upload`
+- Monitor: `pio device monitor`
+
+## Key Constraints
+- This is Phase 0 - working > elegant
+- Safety-critical - bias toward triggering over missing a trigger
+- Budget: keep solutions under $100 total BOM
+- User is beginner - prefer simple, readable code
+
+## After Making Changes
+1. Test build with `pio run`
+2. Update `WORKLOG.md` with what you changed
+3. Update `NEXT.md` if you completed tasks
