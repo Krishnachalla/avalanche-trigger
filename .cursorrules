@@ -2,12 +2,12 @@
 
 ## Required Reading
 Before making changes, read these files:
-1. `CLAUDE.md` - Project context and architecture
-2. `NEXT.md` - Current priorities
-3. `WORKLOG.md` - What's been done (add your work here when done)
+1. `.ai/AGENTS.md` - Project context and architecture
+2. `.ai/NEXT.md` - Current priorities
+3. `.ai/WORKLOG.md` - What's been done (add your work here when done)
 
 ## Project Type
-Embedded C++ firmware for ESP32-C3 using PlatformIO + Arduino framework.
+Embedded C++ firmware for Seeed XIAO ESP32-S3 using PlatformIO + Arduino framework.
 
 ## Code Style
 - Use camelCase for functions and variables
@@ -29,5 +29,5 @@ Embedded C++ firmware for ESP32-C3 using PlatformIO + Arduino framework.
 
 ## After Making Changes
 1. Test build with `pio run`
-2. Update `WORKLOG.md` with what you changed
-3. Update `NEXT.md` if you completed tasks
+2. Update `.ai/WORKLOG.md` with what you changed
+3. Update `.ai/NEXT.md` if you completed tasks
