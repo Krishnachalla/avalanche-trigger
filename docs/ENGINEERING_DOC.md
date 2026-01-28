@@ -45,7 +45,7 @@ This device automatically triggers an avalanche airbag when it detects that the 
 ┌─────────────────────────────────────────────────────────────────────┐
 │                         SENSOR SUBSYSTEM                            │
 │  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐          │
-│  │   BH1750     │    │   LSM6DS3    │    │   Button     │          │
+│  │   VEML7700   │    │   LSM6DSOX   │    │   Button     │          │
 │  │ Light Sensor │    │     IMU      │    │   (ARM)      │          │
 │  └──────┬───────┘    └──────┬───────┘    └──────┬───────┘          │
 │         │ I2C               │ I2C               │ GPIO             │
@@ -55,7 +55,7 @@ This device automatically triggers an avalanche airbag when it detects that the 
 ┌─────────────────────────────────────────────────────────────────────┐
 │                     PROCESSING SUBSYSTEM                            │
 │                    ┌────────────────────┐                           │
-│                    │   XIAO ESP32-C3    │                           │
+│                    │ XIAO ESP32-S3 Sense│                           │
 │                    │                    │                           │
 │                    │  - State Machine   │                           │
 │                    │  - Motion Analysis │                           │
@@ -128,52 +128,62 @@ This device automatically triggers an avalanche airbag when it detects that the 
 
 ### 3.1 Component Selection Rationale
 
-#### 3.1.1 MCU: Seeed XIAO ESP32-C3
+#### 3.1.1 MCU: Seeed XIAO ESP32-S3 Sense
 
 **Selected over alternatives because:**
 - Grove ecosystem compatibility (beginner-friendly)
-- Ultra-compact (21x17.5mm)
+- Ultra-compact (21x17.8mm)
 - Low power modes available
-- WiFi for debugging/logging
+- WiFi/BLE for debugging/logging
 - 3.3V operation matches sensors
+- Built-in camera and microphone (unused but available)
 - Good community support
 
 **Specifications:**
-- CPU: RISC-V 32-bit, 160MHz
-- RAM: 400KB
-- Flash: 4MB
-- GPIO: 11 pins
+- CPU: Xtensa LX7 dual-core, 240MHz
+- RAM: 8MB PSRAM
+- Flash: 8MB
+- GPIO: 11 pins (+ camera/mic pins on expansion)
 - I2C: 1 bus (SDA/SCL)
-- Deep sleep current: ~5μA
+- Deep sleep current: ~14μA
 
-#### 3.1.2 Light Sensor: BH1750
+#### 3.1.2 Light Sensor: Adafruit VEML7700
 
 **Selected over alternatives because:**
 - Digital I2C output (no ADC noise issues)
-- Wide range: 1-65535 lux
-- Built-in 16-bit ADC
-- Low power: 120μA active
-- Grove module available
+- Wide range: 0-140,000 lux
+- Ultra-low power: 2-45μA active, 0.5μA sleep
+- Built-in 16-bit ADC with auto-ranging
+- STEMMA QT/Qwiic connector (easy wiring)
+
+**Specifications:**
+- I2C Address: 0x10 (fixed)
+- Lux Range: 0 to 140,000 lux
+- Resolution: 0.0042 lux (best setting)
+- Voltage: 2.5-3.6V
+- Datasheet: vishay.com/docs/84286/veml7700.pdf
 
 **Alternatives considered:**
-- VEML7700: Similar, but less common
+- BH1750: Similar, but lower range (65k lux max)
+- TSL2591: Higher sensitivity, more expensive
 - Photoresistor + ADC: Analog, requires calibration, noisy
-- TSL2591: More expensive, overkill for this application
 
-#### 3.1.3 IMU: LSM6DS3
+#### 3.1.3 IMU: Adafruit LSM6DSOX
 
 **Selected over alternatives because:**
 - 6-axis (accelerometer + gyroscope) in one package
 - Built-in motion detection interrupts
-- Low power modes
-- Grove module available
-- Well-documented Arduino library
+- Machine learning core for gesture detection
+- Low power modes (0.55mA combo mode)
+- STEMMA QT/Qwiic connector (easy wiring)
 
 **Specifications:**
 - Accelerometer: ±2/±4/±8/±16 g
 - Gyroscope: ±125/±250/±500/±1000/±2000 dps
 - ODR: Up to 6.66 kHz
-- Current: 0.9mA (both active)
+- Current: 0.55mA (combo high-performance mode)
+- I2C Address: 0x6A (or 0x6B)
+- Datasheet: st.com/resource/en/datasheet/lsm6dsox.pdf
 
 #### 3.1.4 Solenoid Driver: IRLZ44N
 
@@ -222,12 +232,12 @@ This device automatically triggers an avalanche airbag when it detects that the 
               │           │           │           │
               │    SDA    │    SCL    │    VCC    │   GND
               │           │           │           │
-         ┌────┴────┐ ┌────┴────┐ ┌────┴────┐ ┌────┴────┐
-         │         │ │         │ │         │ │         │
-    ┌────┴────┐    │ │    ┌────┴────┐      │ │    ┌────┴────┐
-    │ BH1750  ├────┴─┴────┤ LSM6DS3 ├──────┴─┴────┤  XIAO   │
-    │ (0x23)  │           │ (0x6A)  │              │ ESP32C3 │
-    └─────────┘           └─────────┘              └─────────┘
+     ┌────┴────┐ ┌────┴────┐ ┌────┴────┐ ┌────┴────┐
+     │         │ │         │ │         │ │         │
+┌────┴────┐    │ │    ┌────┴────┐      │ │    ┌────┴────┐
+│ VEML7700├────┴─┴────┤ LSM6DSOX├──────┴─┴────┤  XIAO   │
+│ (0x10)  │           │ (0x6A)  │              │ESP32-S3 │
+└─────────┘           └─────────┘              └─────────┘
 
 
          STATUS INDICATORS
@@ -260,18 +270,18 @@ This device automatically triggers an avalanche airbag when it detects that the 
                                         GND
 ```
 
-### 3.3 Pin Assignment
+### 3.3 Pin Assignment (XIAO ESP32-S3 Sense)
 
 | XIAO Pin | GPIO | Function | Connected To |
 |----------|------|----------|--------------|
-| D4 | GPIO6 | I2C SDA | BH1750, LSM6DS3 |
-| D5 | GPIO7 | I2C SCL | BH1750, LSM6DS3 |
-| D2 | GPIO4 | Solenoid | IRLZ44N Gate |
-| D3 | GPIO5 | LED Green | Status LED |
-| D6 | GPIO20 | LED Red | Status LED |
-| D7 | GPIO21 | LED Blue | Status LED |
-| D8 | GPIO8 | Buzzer | Piezo buzzer |
-| D9 | GPIO9 | Button | ARM button |
+| D4 | GPIO5 | I2C SDA | VEML7700, LSM6DSOX |
+| D5 | GPIO6 | I2C SCL | VEML7700, LSM6DSOX |
+| D1 | GPIO2 | Solenoid | IRLZ44N Gate |
+| D2 | GPIO3 | LED Green | Status LED |
+| D3 | GPIO4 | LED Red | Status LED |
+| D0 | GPIO1 | LED Blue | Status LED |
+| D6 | GPIO7 | Buzzer | Piezo buzzer |
+| D7 | GPIO44 | Button | ARM button |
 | BAT | - | Power | LiPo battery |
 | 3V3 | - | Power | Sensor VCC |
 | GND | - | Ground | Common ground |
@@ -280,17 +290,17 @@ This device automatically triggers an avalanche airbag when it detects that the 
 
 | Component | Active Current | Sleep Current |
 |-----------|---------------|---------------|
-| XIAO ESP32-C3 | 80mA | 5μA |
-| BH1750 | 120μA | 1μA |
-| LSM6DS3 | 900μA | 3μA |
+| XIAO ESP32-S3 | 100mA | 14μA |
+| VEML7700 | 45μA | 0.5μA |
+| LSM6DSOX | 550μA | 3μA |
 | LEDs (avg) | 5mA | 0 |
-| **Total (Active)** | **~86mA** | - |
-| **Total (Sleep)** | - | **~9μA** |
+| **Total (Active)** | **~106mA** | - |
+| **Total (Sleep)** | - | **~18μA** |
 
 With 1000mAh battery:
-- Continuous active: ~11.6 hours
-- With 10% duty cycle: ~4.8 days
-- Deep sleep (armed, waiting): ~4.6 years (theoretical)
+- Continuous active: ~9.4 hours
+- With 10% duty cycle: ~3.9 days
+- Deep sleep (armed, waiting): ~2.3 years (theoretical)
 
 ---
 
@@ -574,10 +584,10 @@ Initial values (subject to field calibration):
 
 | Item | Part Number | Qty | Unit Price | Total | Source |
 |------|-------------|-----|------------|-------|--------|
-| XIAO ESP32-C3 | 113991054 | 1 | $4.99 | $4.99 | Seeed |
-| Grove BH1750 | 101020132 | 1 | $5.90 | $5.90 | Seeed |
-| Grove LSM6DS3 | 105020012 | 1 | $11.90 | $11.90 | Seeed |
-| Grove Cable 20cm | 110990027 | 2 | $2.90 | $5.80 | Seeed |
+| XIAO ESP32-S3 Sense | 113991114 | 1 | $13.99 | $13.99 | Seeed |
+| Adafruit VEML7700 | PID 4162 | 1 | $5.95 | $5.95 | Adafruit |
+| Adafruit LSM6DSOX | PID 4438 | 1 | $11.95 | $11.95 | Adafruit |
+| STEMMA QT Cable 100mm | PID 4210 | 2 | $0.95 | $1.90 | Adafruit |
 | IRLZ44N MOSFET | IRLZ44NPBF | 2 | $1.50 | $3.00 | Amazon |
 | 1N4007 Diode | 1N4007 | 5 | $0.10 | $0.50 | Amazon |
 | 10kΩ Resistor | - | 5 | $0.05 | $0.25 | Amazon |
@@ -590,7 +600,7 @@ Initial values (subject to field calibration):
 | Breadboard | - | 1 | $5.00 | $5.00 | Amazon |
 | Jumper Wires | - | 1 | $4.00 | $4.00 | Amazon |
 | Enclosure | - | 1 | $8.00 | $8.00 | Amazon |
-| **TOTAL** | | | | **$61.59** | |
+| **TOTAL** | | | | **$66.79** | |
 
 ---
 
@@ -602,12 +612,10 @@ Initial values (subject to field calibration):
 - Connect XIAO 3V3 to breadboard + rail
 - Connect XIAO GND to breadboard - rail
 
-**Step 2: I2C Bus**
-- Connect BH1750 SDA to XIAO D4
-- Connect BH1750 SCL to XIAO D5
-- Connect BH1750 VCC to + rail
-- Connect BH1750 GND to - rail
-- Repeat for LSM6DS3
+**Step 2: I2C Bus (STEMMA QT makes this easy!)**
+- Connect VEML7700 to XIAO via STEMMA QT cable (SDA=D4, SCL=D5)
+- Daisy-chain LSM6DSOX to VEML7700 via second STEMMA QT cable
+- No soldering needed with STEMMA QT connectors!
 
 **Step 3: Solenoid Driver**
 - Place IRLZ44N on breadboard

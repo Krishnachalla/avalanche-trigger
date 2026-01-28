@@ -2,8 +2,8 @@
 
 <OVERVIEW>
 Name = Avalanche Airbag Auto-Trigger
-Target MCU = ESP32-C3
-Board = Seeed XIAO ESP32-C3
+Target MCU = ESP32-S3
+Board = Seeed XIAO ESP32-S3 Sense
 Toolchain = PlatformIO + Arduino Framework
 Debug Interface = serial
 RTOS / SDK = Arduino (ESP-IDF underneath)
@@ -49,9 +49,9 @@ Safety-critical avalanche survival device that automatically deploys an airbag w
 5. Solenoid triggers CO2 valve to deploy airbag
 
 **Hardware:**
-- MCU: Seeed XIAO ESP32-C3
-- Light Sensor: Grove BH1750 (I2C, 0x23)
-- IMU: Grove LSM6DS3 (I2C, 0x6A)
+- MCU: Seeed XIAO ESP32-S3 Sense
+- Light Sensor: Adafruit VEML7700 (I2C, 0x10)
+- IMU: Adafruit LSM6DSOX (I2C, 0x6A)
 - Output: MOSFET-driven solenoid (12V via MT3608 boost)
 - Power: 3.7V LiPo battery
 
@@ -94,18 +94,18 @@ pio lib install
 - **Safety:** Solenoid defaults LOW (safe), explicit arming required
 - **Debug:** Conditional compilation with `#if DEBUG_ENABLED`
 
-## Pin Mapping (XIAO ESP32-C3)
+## Pin Mapping (XIAO ESP32-S3 Sense)
 
 | Function    | GPIO | XIAO Pin | Notes                    |
 |-------------|------|----------|--------------------------|
-| SDA         | 6    | D4       | I2C data (BH1750, LSM6DS3) |
-| SCL         | 7    | D5       | I2C clock                |
-| Solenoid    | 4    | D2       | MOSFET gate (active HIGH)|
-| LED Green   | 5    | D3       | Status LED               |
-| LED Red     | 20   | D6       | Status LED               |
-| LED Blue    | 21   | D7       | Status LED               |
-| Buzzer      | 8    | D8       | Warning buzzer           |
-| Button      | 9    | D9       | Arm/disarm (active LOW)  |
+| SDA         | 5    | D4       | I2C data (VEML7700, LSM6DSOX) |
+| SCL         | 6    | D5       | I2C clock                |
+| Solenoid    | 2    | D1       | MOSFET gate (active HIGH)|
+| LED Green   | 3    | D2       | Status LED               |
+| LED Red     | 4    | D3       | Status LED               |
+| LED Blue    | 1    | D0       | Status LED               |
+| Buzzer      | 7    | D6       | Warning buzzer           |
+| Button      | 44   | D7       | Arm/disarm (active LOW)  |
 
 ## Key Files
 
@@ -119,8 +119,8 @@ pio lib install
 
 ## Libraries
 
-- `claws/BH1750@^1.3.0` - Light sensor driver
-- `adafruit/Adafruit LSM6DS@^4.7.2` - IMU driver
+- `adafruit/Adafruit VEML7700 Library@^2.1.6` - Light sensor driver
+- `adafruit/Adafruit LSM6DS@^4.7.2` - IMU driver (LSM6DSOX)
 - `adafruit/Adafruit Unified Sensor@^1.1.14` - Sensor abstraction
 - `adafruit/Adafruit BusIO@^1.14.5` - I2C/SPI abstraction
 

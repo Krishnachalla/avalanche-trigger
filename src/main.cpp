@@ -16,16 +16,16 @@
  * - Never triggers while moving
  * 
  * Hardware:
- * - XIAO ESP32-C3
- * - BH1750 Light Sensor (I2C)
- * - LSM6DS3 IMU (I2C)
+ * - XIAO ESP32-S3 Sense
+ * - Adafruit VEML7700 Light Sensor (I2C)
+ * - Adafruit LSM6DSOX IMU (I2C)
  * - MOSFET + Solenoid
  */
 
 #include <Arduino.h>
 #include <Wire.h>
-#include <BH1750.h>
-#include <Adafruit_LSM6DS3.h>
+#include <Adafruit_VEML7700.h>
+#include <Adafruit_LSM6DSOX.h>
 
 #include "config.h"
 
@@ -49,8 +49,8 @@ SystemState currentState = STATE_DISARMED;
 // SENSOR OBJECTS
 // =============================================================================
 
-BH1750 lightSensor;
-Adafruit_LSM6DS3 imu;
+Adafruit_VEML7700 lightSensor = Adafruit_VEML7700();
+Adafruit_LSM6DSOX imu;
 
 // =============================================================================
 // MOTION DETECTION VARIABLES
@@ -222,18 +222,21 @@ void initPins() {
 bool initSensors() {
     bool success = true;
     
-    // Initialize BH1750 light sensor
-    Serial.print("Initializing BH1750... ");
-    if (lightSensor.begin(BH1750::CONTINUOUS_HIGH_RES_MODE, BH1750_ADDRESS)) {
+    // Initialize VEML7700 light sensor
+    Serial.print("Initializing VEML7700... ");
+    if (lightSensor.begin()) {
         Serial.println("OK");
+        // Configure for high sensitivity
+        lightSensor.setGain(VEML7700_GAIN_1);
+        lightSensor.setIntegrationTime(VEML7700_IT_100MS);
     } else {
         Serial.println("FAILED");
         success = false;
     }
     
-    // Initialize LSM6DS3 IMU
-    Serial.print("Initializing LSM6DS3... ");
-    if (imu.begin_I2C(LSM6DS3_ADDRESS)) {
+    // Initialize LSM6DSOX IMU
+    Serial.print("Initializing LSM6DSOX... ");
+    if (imu.begin_I2C(LSM6DSOX_ADDRESS)) {
         Serial.println("OK");
         
         // Configure accelerometer
@@ -345,7 +348,7 @@ void readButton() {
 // =============================================================================
 
 uint16_t readLight() {
-    float lux = lightSensor.readLightLevel();
+    float lux = lightSensor.readLux();
     if (lux < 0) {
         // Error reading sensor
         return 0xFFFF;

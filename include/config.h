@@ -9,26 +9,27 @@
 #define CONFIG_H
 
 // =============================================================================
-// PIN DEFINITIONS (XIAO ESP32-C3)
+// PIN DEFINITIONS (XIAO ESP32-S3 Sense)
 // =============================================================================
 
-// I2C Bus (shared by BH1750 and LSM6DS3)
-#define PIN_SDA         6   // D4 on XIAO
-#define PIN_SCL         7   // D5 on XIAO
+// I2C Bus (shared by VEML7700 and LSM6DSOX)
+// XIAO ESP32-S3 default I2C pins
+#define PIN_SDA         5   // D4 on XIAO ESP32-S3
+#define PIN_SCL         6   // D5 on XIAO ESP32-S3
 
 // Solenoid driver (MOSFET gate)
-#define PIN_SOLENOID    4   // D2 on XIAO
+#define PIN_SOLENOID    2   // D1 on XIAO ESP32-S3
 
 // Status LEDs (active HIGH)
-#define PIN_LED_GREEN   5   // D3 on XIAO
-#define PIN_LED_RED     20  // D6 on XIAO
-#define PIN_LED_BLUE    21  // D7 on XIAO
+#define PIN_LED_GREEN   3   // D2 on XIAO ESP32-S3
+#define PIN_LED_RED     4   // D3 on XIAO ESP32-S3
+#define PIN_LED_BLUE    1   // D0 on XIAO ESP32-S3
 
 // Buzzer (active HIGH)
-#define PIN_BUZZER      8   // D8 on XIAO
+#define PIN_BUZZER      7   // D6 on XIAO ESP32-S3
 
 // ARM button (active LOW with pull-up)
-#define PIN_BUTTON      9   // D9 on XIAO
+#define PIN_BUTTON      44  // D7 (TX) on XIAO ESP32-S3
 
 // =============================================================================
 // DETECTION THRESHOLDS
@@ -91,8 +92,8 @@
 // I2C ADDRESSES
 // =============================================================================
 
-#define BH1750_ADDRESS          0x23    // or 0x5C if ADDR pin is HIGH
-#define LSM6DS3_ADDRESS         0x6A    // or 0x6B if SA0 pin is HIGH
+#define VEML7700_ADDRESS        0x10    // Fixed address (no alternatives)
+#define LSM6DSOX_ADDRESS        0x6A    // or 0x6B if SA0 pin is HIGH
 
 // =============================================================================
 // DEBUG SETTINGS

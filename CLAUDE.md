@@ -10,9 +10,9 @@
 Safety-critical embedded device that automatically deploys an avalanche airbag when a skier is buried and incapacitated. Detects burial via light sensor, confirms incapacitation via IMU stillness, then triggers solenoid to deploy airbag.
 
 ## Hardware
-- **MCU:** Seeed XIAO ESP32-C3 (RISC-V, WiFi/BLE, USB-C)
-- **Light Sensor:** Grove BH1750 (I2C, addr 0x23)
-- **IMU:** Grove LSM6DS3 (I2C, addr 0x6A)
+- **MCU:** Seeed XIAO ESP32-S3 Sense (Xtensa dual-core, WiFi/BLE, USB-C)
+- **Light Sensor:** Adafruit VEML7700 (I2C, addr 0x10)
+- **IMU:** Adafruit LSM6DSOX (I2C, addr 0x6A)
 - **Output:** IRLZ44N MOSFET driving 12V solenoid
 - **Power:** 3.7V LiPo + MT3608 boost converter
 
@@ -53,15 +53,15 @@ pio device monitor         # Serial monitor (115200 baud)
 ## State Machine
 `DISARMED → ARMED → MONITORING → WARNING → TRIGGERED → DEPLOYED`
 
-## Pin Mapping
+## Pin Mapping (XIAO ESP32-S3 Sense)
 | Function | GPIO | Notes |
 |----------|------|-------|
-| I2C SDA | 6 | Shared by sensors |
-| I2C SCL | 7 | Shared by sensors |
-| Solenoid | 4 | MOSFET gate |
-| Button | 9 | Arm/cancel (INPUT_PULLUP) |
-| Buzzer | 8 | Warning tone |
-| LEDs | 5,20,21 | Green, Red, Blue |
+| I2C SDA | 5 | Shared by sensors |
+| I2C SCL | 6 | Shared by sensors |
+| Solenoid | 2 | MOSFET gate |
+| Button | 44 | Arm/cancel (INPUT_PULLUP) |
+| Buzzer | 7 | Warning tone |
+| LEDs | 1,3,4 | Blue, Green, Red |
 
 ## Development Phase
 **Phase 0** - Working prototype. Priorities:
