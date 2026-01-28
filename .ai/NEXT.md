@@ -1,6 +1,6 @@
 # What To Do Next
 
-> **FOR AI ASSISTANTS**: Read `AGENTS.md` first for full project context.
+> **FOR AI ASSISTANTS**: Read `.ai/AGENTS.md` first for full project context.
 > This file is the single source of truth for priorities.
 > Update this file when completing tasks or discovering new requirements.
 >
@@ -23,7 +23,7 @@
 - [ ] Update copilot-instructions.md
 - [ ] Set up GitHub Issues + Labels
 
-**If you're Embedder:** Wait for this reorganization to complete, or read WORKLOG.md for latest state. Hardware info is changing from ESP32-C3 → ESP32-S3, BH1750 → VEML7700, LSM6DS3 → LSM6DSOX.
+**If you're Embedder:** Wait for this reorganization to complete, or read `.ai/WORKLOG.md` for latest state. Hardware info is changing from ESP32-C3 → ESP32-S3, BH1750 → VEML7700, LSM6DS3 → LSM6DSOX.
 
 ---
 

@@ -1,8 +1,8 @@
 # EMBEDDER PROJECT CONTEXT
 
 > **This project uses the AGENTS.md standard.**
-> For full context: read `AGENTS.md`. For priorities: read `NEXT.md`.
-> After working: update `WORKLOG.md` (append to top).
+> For full context: read `.ai/AGENTS.md`. For priorities: read `.ai/NEXT.md`.
+> After working: update `.ai/WORKLOG.md` (append to top).
 
 <OVERVIEW>
 Name = Avalanche Airbag Auto-Trigger

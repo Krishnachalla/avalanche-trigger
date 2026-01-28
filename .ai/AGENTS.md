@@ -106,12 +106,18 @@ All tunable parameters in `include/config.h`:
 ├── src/main.cpp              # Main firmware, state machine
 ├── include/config.h          # All tunable parameters
 ├── platformio.ini            # Build config, dependencies
-├── AGENTS.md                 # This file (AI context)
-├── NEXT.md                   # Current priorities
-├── WORKLOG.md                # History of changes
+├── README.md                 # Project overview
+├── CHANGELOG.md              # Release history
+├── .ai/                      # AI assistant context
+│   ├── AGENTS.md             # This file (AI context)
+│   ├── EMBEDDER.md           # Embedder-specific config
+│   ├── NEXT.md               # Current priorities
+│   └── WORKLOG.md            # History of changes
 ├── docs/
 │   ├── PROJECT_MANIFESTO.md  # Philosophy, phases, hard rules
-│   └── ENGINEERING_DOC.md    # Full specs, BOM, circuits
+│   ├── ENGINEERING_DOC.md    # Full specs, BOM, circuits
+│   ├── DECISIONS.md          # Decision history
+│   └── debug/                # Debug session logs
 ```
 
 ---
@@ -150,21 +156,21 @@ When hardware is available, test incrementally:
 
 | File | Purpose | Who Updates |
 |------|---------|-------------|
-| `AGENTS.md` | Project context (this file) | Update when architecture changes |
+| `.ai/AGENTS.md` | Project context (this file) | Update when architecture changes |
 | `docs/DECISIONS.md` | Decision history & evolution | Append when decisions change |
-| `NEXT.md` | Current priorities & tasks | Update when completing/adding tasks |
-| `WORKLOG.md` | History of changes | Append to TOP after each session |
+| `.ai/NEXT.md` | Current priorities & tasks | Update when completing/adding tasks |
+| `.ai/WORKLOG.md` | History of changes | Append to TOP after each session |
 
 ### Before Working
 
-1. Read `AGENTS.md` (this file)
+1. Read `.ai/AGENTS.md` (this file)
 2. Read `docs/DECISIONS.md` for decision history and evolution
-3. Read `NEXT.md` for current priority
+3. Read `.ai/NEXT.md` for current priority
 4. Read relevant source files
 
 ### After Working
 
-1. Update `WORKLOG.md` (append to TOP):
+1. Update `.ai/WORKLOG.md` (append to TOP):
    ```markdown
    ## YYYY-MM-DD - [Tool Name]
    **Summary**
@@ -175,13 +181,13 @@ When hardware is available, test incrementally:
 
    **Status:** Current state / Next steps
    ```
-2. Update `NEXT.md` if priorities changed
-3. Update `AGENTS.md` if architecture changed
+2. Update `.ai/NEXT.md` if priorities changed
+3. Update `.ai/AGENTS.md` if architecture changed
 
 ### When Stuck
 
 - Don't guess - ask the user
-- Document blockers in `NEXT.md`
+- Document blockers in `.ai/NEXT.md`
 
 ---
 
@@ -191,7 +197,7 @@ Some tools have additional context files:
 
 | File | Tool | Purpose |
 |------|------|---------|
-| `EMBEDDER.md` | Embedder | Build commands, pin mapping |
+| `.ai/EMBEDDER.md` | Embedder | Build commands, pin mapping |
 | `.github/copilot-instructions.md` | GitHub Copilot | Copilot-specific rules |
 
 These supplement, not replace, this file.

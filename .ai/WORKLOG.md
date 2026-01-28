@@ -6,6 +6,40 @@
 ---
 
 ## 2025-01-28 - Embedder
+**Repository Cleanup - Moved AI files to .ai/ folder**
+
+**What was done:**
+- Created `.ai/` folder for AI assistant context files
+- Moved AGENTS.md, EMBEDDER.md, NEXT.md, WORKLOG.md to `.ai/`
+- Deleted redundant files: CLAUDE.md, docs/CHAT_HISTORY.md, docs/EMBEDDER_INSTRUCTIONS.md
+- Moved debug sessions to `docs/debug/` folder
+- Updated all internal path references
+
+**Files changed:**
+- `.ai/AGENTS.md` - Moved from root, updated paths
+- `.ai/EMBEDDER.md` - Moved from root, updated paths
+- `.ai/NEXT.md` - Moved from root, updated paths
+- `.ai/WORKLOG.md` - Moved from root
+- `docs/debug/2025-01-28.md` - Moved from docs/
+- `docs/debug/2025-01-28_raw.md` - Moved from docs/
+- DELETED: `CLAUDE.md`, `docs/CHAT_HISTORY.md`, `docs/EMBEDDER_INSTRUCTIONS.md`
+
+**New structure:**
+```
+/
+├── README.md, CHANGELOG.md    (user-facing)
+├── .ai/                       (AI context - hidden)
+│   ├── AGENTS.md, EMBEDDER.md, NEXT.md, WORKLOG.md
+├── docs/
+│   ├── ENGINEERING_DOC.md, PROJECT_MANIFESTO.md, DECISIONS.md
+│   └── debug/
+```
+
+**Status:** Root is now clean. AI files are organized.
+
+---
+
+## 2025-01-28 - Embedder
 **Created DECISIONS.md - Decision History Tracking**
 
 **Why:** User requested a way to track the evolution of decisions - when plans changed, why they branched, what alternatives were considered. Existing docs showed WHAT changed but not the decision history.
