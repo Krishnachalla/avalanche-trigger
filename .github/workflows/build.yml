@@ -1,0 +1,72 @@
+# GitHub Actions workflow for PlatformIO build
+# Automatically builds firmware on push and pull requests
+#
+# Created by: Claude Code (claude-opus-4-5-20251101)
+# Date: 2026-01-27
+# Why: Ensure firmware compiles correctly before merging changes
+
+name: PlatformIO Build
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/**'
+      - 'include/**'
+      - 'lib/**'
+      - 'platformio.ini'
+      - '.github/workflows/build.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'include/**'
+      - 'lib/**'
+      - 'platformio.ini'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache PlatformIO
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio-${{ hashFiles('platformio.ini') }}
+          restore-keys: |
+            ${{ runner.os }}-pio-
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PlatformIO
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade platformio
+
+      - name: Build firmware
+        run: pio run
+
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware
+          path: .pio/build/*/firmware.*
+          retention-days: 30
+          if-no-files-found: warn
+
+  # Future: Add hardware-in-the-loop testing
+  # test:
+  #   needs: build
+  #   runs-on: self-hosted
+  #   steps:
+  #     - name: Flash and test on real hardware
+  #       run: pio run --target upload && pio test

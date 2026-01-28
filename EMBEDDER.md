@@ -1,5 +1,9 @@
 # EMBEDDER PROJECT CONTEXT
 
+> **This project uses the AGENTS.md standard.**
+> For full context: read `AGENTS.md`. For priorities: read `NEXT.md`.
+> After working: update `WORKLOG.md` (append to top).
+
 <OVERVIEW>
 Name = Avalanche Airbag Auto-Trigger
 Target MCU = ESP32-S3

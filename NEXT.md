@@ -1,28 +1,48 @@
 # What To Do Next
 
-> **FOR AI ASSISTANTS**: This is the single source of truth for priorities.
+> **FOR AI ASSISTANTS**: Read `AGENTS.md` first for full project context.
+> This file is the single source of truth for priorities.
 > Update this file when completing tasks or discovering new requirements.
-> 
+>
 > **FOR KRISHNA**: Just update this file to tell any AI what you want done.
+
+---
+
+## ACTIVE SESSION: 2026-01-27 - Claude Code
+
+**What's happening:** Claude Code is performing a major project reorganization based on research into GitHub ecosystem best practices and AGENTS.md standard.
+
+**Why:** To establish proper multi-AI collaboration, fix outdated documentation, set up CI/CD, and clean up redundant files.
+
+**Tasks in progress:**
+- [ ] Fix README.md (update to current hardware)
+- [ ] Create CHANGELOG.md
+- [ ] Create GitHub Actions workflow (auto-build)
+- [ ] Create issue templates (bug, feature, hardware)
+- [ ] Merge/delete redundant docs
+- [ ] Update copilot-instructions.md
+- [ ] Set up GitHub Issues + Labels
+
+**If you're Embedder:** Wait for this reorganization to complete, or read WORKLOG.md for latest state. Hardware info is changing from ESP32-C3 → ESP32-S3, BH1750 → VEML7700, LSM6DS3 → LSM6DSOX.
 
 ---
 
 ## Current Phase: 0 (Working Prototype)
 
-## Immediate Priority
-**Waiting for hardware** - User needs to order components before proceeding.
+## After Reorganization
+**Waiting for hardware** - User needs to order/connect components before firmware testing.
 
 ## When Hardware Arrives
 
 ### 1. First Boot Test
-- [ ] Connect XIAO ESP32-C3 via USB
+- [ ] Connect XIAO ESP32-S3 Sense via USB
 - [ ] Flash firmware: `pio run --target upload`
 - [ ] Open serial monitor: `pio device monitor`
 - [ ] Verify "System ready - DISARMED" message
 
 ### 2. I2C Sensor Test
-- [ ] Wire BH1750 and LSM6DS3 to I2C bus
-- [ ] Run I2C scanner to verify addresses (0x23, 0x6A)
+- [ ] Wire VEML7700 and LSM6DSOX via STEMMA QT
+- [ ] Run I2C scanner to verify addresses (0x10, 0x6A)
 - [ ] Check sensor readings in serial output
 
 ### 3. Output Test

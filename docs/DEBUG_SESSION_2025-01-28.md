@@ -1,0 +1,201 @@
+# Debug Session Log - I2C Scanner & Serial Communication
+
+**Date:** 2025-01-28  
+**Tool:** Embedder  
+**Board:** Seeed XIAO ESP32-S3  
+**Serial Port:** `/dev/cu.usbmodem2101`  
+**Baud Rate:** 115200  
+
+---
+
+## Observer Notes (User Perspective)
+
+> "I heard small clicks but nothing worked on the board - whatever you did"
+
+The user observed:
+- Audible clicking sounds from the board (likely relay/power cycling during flash)
+- No visible response or indication of firmware running
+- Multiple flash attempts occurred
+
+---
+
+## Session Timeline
+
+### Problem 1: Serial Monitor Not Receiving Data
+
+**Symptom:** Serial monitor commands timed out with no output.
+
+**Attempted Solutions:**
+1. `cat /dev/cu.usbmodem2101` - Timed out after 8 seconds, no data
+2. Tried cycling DTR/RTS lines to reset board - No effect
+3. Multiple serial monitor attempts - All timed out
+
+**Root Cause:** The existing firmware was not producing serial output properly.
+
+---
+
+### Solution: Simplified Test Firmware
+
+Temporarily replaced `src/i2c_scanner.cpp` with minimal "Hello World" to verify serial works.
+
+**Temporary Code (NOT SAVED - was overwritten):**
+```cpp
+#include <Arduino.h>
+
+void setup() {
+    Serial.begin(115200);
+    delay(2000);
+}
+
+void loop() {
+    static int count = 1;
+    Serial.print("Hello, World! ");
+    Serial.println(count++);
+    delay(1000);
+}
+```
+
+**Build & Flash Output:**
+```
+Platform: Espressif 32 (6.12.0)
+Board: Seeed Studio XIAO ESP32S3
+MCU: ESP32S3 @ 240MHz
+RAM: 320KB, Flash: 8MB, PSRAM: 8MB
+
+Firmware Size:
+- RAM:   5.5% (18104 / 327680 bytes)
+- Flash: 8.0% (266277 / 3342336 bytes)
+
+Upload: SUCCESS via esptool @ 460800 baud
+Hard resetting via RTS pin...
+```
+
+**Serial Monitor Result:** SUCCESS
+```
+Hello, World! 1
+Hello, World! 2
+Hello, World! 3
+Hello, World! 4
+Hello, World! 5
+```
+
+**Conclusion:** Serial communication confirmed working at 115200 baud.
+
+---
+
+### Step 2: Restore Full I2C Scanner
+
+After confirming serial worked, restored full I2C scanner firmware to `src/i2c_scanner.cpp`.
+
+**Build & Flash Output:**
+```
+Firmware Size:
+- RAM:   5.5% (18104 / 327680 bytes)
+- Flash: 8.0% (267277 / 3342336 bytes)
+
+Upload: SUCCESS
+```
+
+---
+
+## I2C Scan Results
+
+**Serial Output Captured:**
+```
+=== Scanning Wire (GPIO5/6) ===
+  Device found at 0x3C (SSD1306 OLED)
+  Device found at 0x51
+  Total: 2 device(s)
+
+[Re-scanning...]
+
+=== Scanning Wire (GPIO5/6) ===
+  Device found at 0x3C (SSD1306 OLED)
+  Device found at 0x51
+  Total: 2 device(s)
+```
+
+**Devices Found:**
+
+| Address | Device Identified | Notes |
+|---------|-------------------|-------|
+| `0x3C`  | SSD1306 OLED Display | Common 128x64 OLED |
+| `0x51`  | Unknown | Possibly EEPROM, RTC, or sensor module |
+
+**Devices NOT Found:**
+- `0x6A/0x6B` - LSM6DS3/LSM6DSOX IMU (expected on Sense expansion board)
+- `0x76/0x77` - BME280/BMP280 environmental sensor
+- `0x10` - VEML7700 light sensor
+
+---
+
+## Files Currently on Disk
+
+| File | Status | Content |
+|------|--------|---------|
+| `src/i2c_scanner.cpp` | CURRENT | Full I2C scanner (129 lines) |
+| `src/main.cpp.bak` | BACKUP | Original main firmware |
+
+**Note:** The temporary "Hello World" test code was NOT preserved - it was overwritten when restoring the I2C scanner.
+
+---
+
+## Hardware Observations
+
+1. **Board responds to flash commands** - esptool connects successfully
+2. **USB-Serial/JTAG mode active** - Using built-in USB, not external UART
+3. **Hard reset via RTS pin works** - Board resets after flash
+4. **Clicking sounds heard** - Normal during flash/reset cycle (capacitor discharge or relay)
+
+---
+
+## Conclusions
+
+1. **Serial communication is functional** at 115200 baud
+2. **I2C bus is working** - Two devices detected on GPIO5/6
+3. **OLED display present** at 0x3C (SSD1306)
+4. **Unknown device at 0x51** - Needs identification
+5. **No IMU detected** - Suggests user has base XIAO ESP32-S3, NOT the "Sense" variant (which has onboard IMU)
+
+---
+
+## Open Questions
+
+1. What is the device at address 0x51?
+2. Does the user have the Sense expansion board attached?
+3. Are external sensors (VEML7700, LSM6DSOX) connected?
+
+---
+
+## Commands Used
+
+```bash
+# Build and upload
+pio run --target upload
+
+# Serial monitor (with stop string)
+# Used Embedder's serialMonitor tool with:
+#   port: /dev/cu.usbmodem2101
+#   baud: 115200
+#   stop_string: "Hello" (for test) / "Scan complete" (for scanner)
+#   timeout: 10000ms
+
+# Manual alternatives:
+pio device monitor -b 115200
+screen /dev/cu.usbmodem2101 115200
+cat /dev/cu.usbmodem2101  # (didn't work - needs proper serial handling)
+```
+
+---
+
+## What Was NOT Saved
+
+The following happened but was not preserved:
+
+1. **Hello World test firmware** - Overwritten, code shown above for reference
+2. **Full serial output from all I2C pin configurations** - Only partial capture (GPIO5/6 results)
+3. **Exact timestamps** of each flash attempt
+
+---
+
+*Log generated by Embedder - I2C debugging session*
