@@ -151,14 +151,16 @@ When hardware is available, test incrementally:
 | File | Purpose | Who Updates |
 |------|---------|-------------|
 | `AGENTS.md` | Project context (this file) | Update when architecture changes |
+| `docs/DECISIONS.md` | Decision history & evolution | Append when decisions change |
 | `NEXT.md` | Current priorities & tasks | Update when completing/adding tasks |
 | `WORKLOG.md` | History of changes | Append to TOP after each session |
 
 ### Before Working
 
 1. Read `AGENTS.md` (this file)
-2. Read `NEXT.md` for current priority
-3. Read relevant source files
+2. Read `docs/DECISIONS.md` for decision history and evolution
+3. Read `NEXT.md` for current priority
+4. Read relevant source files
 
 ### After Working
 

@@ -5,6 +5,28 @@
 
 ---
 
+## 2025-01-28 - Embedder
+**Created DECISIONS.md - Decision History Tracking**
+
+**Why:** User requested a way to track the evolution of decisions - when plans changed, why they branched, what alternatives were considered. Existing docs showed WHAT changed but not the decision history.
+
+**What was done:**
+- Created `docs/DECISIONS.md` with full decision history reconstructed from logs
+- Documented 8 major decisions from project inception to now
+- Added timeline overview showing evolution: C3 → S3 Sense → Base S3
+- Listed pending decisions needing user input
+- Added "Questions for Krishna" section for gaps only user knows
+- Updated `AGENTS.md` to reference DECISIONS.md in workflow
+
+**Files changed:**
+- `docs/DECISIONS.md` - NEW: Complete decision history
+- `AGENTS.md` - Added DECISIONS.md to shared memory files and workflow
+- `WORKLOG.md` - This entry
+
+**Status:** Decision tracking in place. User should fill in gaps from early conversations.
+
+---
+
 ## 2026-01-27 - Claude Code (Claude Opus 4.5)
 **Major Project Reorganization - GitHub Ecosystem Setup**
 
